@@ -67,7 +67,6 @@ class _ScreenSpace extends State<ScreenSpace> {
 
   Widget _buildRow(Door door, int index) {
     bool isDoorVisible = door.state == "unlocked";
-
     return ListTile(
       title: Text('D    ${door.id}'),
       trailing: Row(

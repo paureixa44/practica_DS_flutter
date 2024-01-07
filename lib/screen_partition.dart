@@ -13,6 +13,7 @@ class ScreenPartition extends StatefulWidget {
 
 class _ScreenPartitionState extends State<ScreenPartition> {
   late Future<Tree> futureTree;
+  late bool locked;
 
   @override
   void initState() {
@@ -73,10 +74,13 @@ class _ScreenPartitionState extends State<ScreenPartition> {
         title: Text('P    ${area.id}'),
         trailing: IconButton(
           icon: Icon(Icons.lock_outline), // Icon for partition
-          onPressed: () {
-
+          onPressed: () async {
             // Logic when the lock icon in partition is pressed
-            _navigateDownPartition(area.id);
+            locked = await getAreaState(area.id);
+            if (locked)
+              unlockArea(area);
+            else
+              lockArea(area);
             // TODO: Add any other necessary logic
           },
         ),
@@ -88,11 +92,17 @@ class _ScreenPartitionState extends State<ScreenPartition> {
         title: Text('S    ${area.id}'),
         trailing: IconButton(
           icon: Icon(Icons.lock_outline), // Icon for space
-          onPressed: () {
+          onPressed: () async {
             // Logic when the door icon in space is pressed
-            _navigateDownSpace(area.id);
+            //_navigateDownSpace(area.id);
             // TODO: Add any other necessary logic
+            locked = await getAreaState(area.id);
+            if (locked)
+              unlockArea(area);
+            else
+              lockArea(area);
           },
+
         ),
         onTap: () => _navigateDownSpace(area.id),
         // TODO, navigate down to show children doors
@@ -100,6 +110,14 @@ class _ScreenPartitionState extends State<ScreenPartition> {
     }
     // Handle other cases or return a default widget if needed
     return Container();
+  }
+
+  Widget _buildLockIcon(bool lock) {
+    if (locked) {
+      return Icon(Icons.lock_outline); // Icon for locked door
+    } else {
+      return Icon(Icons.lock_open); // Icon for unlocked door
+    }
   }
 
 
