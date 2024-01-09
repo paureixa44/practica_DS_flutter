@@ -1,15 +1,18 @@
+import 'package:practica_ds_flutter/requests.dart';
+
 abstract class Area{
   late String id;
   late List<dynamic> children;
-  Area(this.id, this.children);
+  late bool locked;
+  Area(this.id, this.children, this.locked);
 }
 
 class Partition extends Area {
-  Partition(String id, List<Area>children) : super(id, children);
+  Partition(String id, List<Area>children, bool locked) : super(id, children, locked);
 }
 
 class Space extends Area {
-  Space(String id, List<Door> children) : super(id, children);
+  Space(String id, List<Door> children, bool locked) : super(id, children, locked);
 }
 
 class Door {
@@ -32,20 +35,20 @@ class Tree {
       List<Area> children = <Area>[]; // is growable
       for (Map<String, dynamic> area in dec['areas']) {
         if (area['class'] == "partition") {
-          children.add(Partition(area['id'], <Area>[]));
+          children.add(Partition(area['id'], <Area>[], area['locked']));
         } else if (area['class'] == "space") {
-          children.add(Space(area['id'], <Door>[]));
+          children.add(Space(area['id'], <Door>[], area['locked']));
         } else {
           assert(false);
         }
       }
-      root = Partition(dec['id'], children);
+      root = Partition(dec['id'], children, dec['lockedArea']);
     } else if (dec['class'] == "space") {
       List<Door> children = <Door>[];
       for (Map<String, dynamic> d in dec['access_doors']) {
         children.add(Door(id: d['id'], state: d['state'], closed: d['closed']));
       }
-      root = Space(dec['id'], children);
+      root = Space(dec['id'], children, dec['lockedArea']);
     } else {
       assert(false);
     }

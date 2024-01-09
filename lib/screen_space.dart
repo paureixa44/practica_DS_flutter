@@ -123,7 +123,7 @@ class _ScreenSpace extends State<ScreenSpace> {
     if (closed) {
       return Icon(Icons.door_back_door_outlined); // Icon for locked door
     } else {
-      return Icon(Icons.closed_caption); // Icon for unlocked door
+      return Icon(Icons.meeting_room); // Icon for unlocked door
     }
   }
 }
